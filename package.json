@@ -1,0 +1,14 @@
+{
+  "name": "cryptovoxels-contracts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "truffle test",
+    "build": "truffle-flattener contracts/CryptovoxelsProperty.sol > cryptovoxels-property.flattened.sol"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openzeppelin-solidity": "1.9.0"
+  }
+}
