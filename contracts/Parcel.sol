@@ -47,8 +47,8 @@ contract Parcel is ERC721Token, Ownable {
 
   event SetPrice(uint256 _tokenId, uint256 _price);
 
-  constructor (string name, string symbol) public
-    ERC721Token(name, symbol)
+  constructor () public
+    ERC721Token('Cryptovoxels Parcel', 'CVPA')
   { 
     creator = msg.sender;
   }

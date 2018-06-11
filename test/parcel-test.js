@@ -12,6 +12,18 @@ contract('mint test', async (accounts) => {
   const firstTokenId = 1
   const secondTokenId = 2
 
+  it('should have name', async () => {
+    let instance = await Parcel.deployed()
+    let name = await instance.name.call()
+    assert.equal(name.valueOf(), 'Cryptovoxels Parcel')
+  })
+
+  it('should have symbol', async () => {
+    let instance = await Parcel.deployed()
+    let name = await instance.symbol.call()
+    assert.equal(name.valueOf(), 'CVPA')
+  })
+
   it('should have 0 tokens', async () => {
     let instance = await Parcel.deployed()
     let balance = await instance.totalSupply.call()
@@ -26,7 +38,7 @@ contract('mint test', async (accounts) => {
 
   describe('parcel token functions', function () {
     beforeEach(async function () {
-      this.token = await Parcel.new('beep', 'boop', { from: creator })
+      this.token = await Parcel.new({ from: creator })
     })
 
     beforeEach(async function () {
@@ -302,7 +314,7 @@ contract('mint test', async (accounts) => {
     let tokenId = 10
 
     beforeEach(async function () {
-      this.token = await Parcel.new('beep', 'boop', { from: creator })
+      this.token = await Parcel.new({ from: creator })
     })
 
     describe('buy', function () {

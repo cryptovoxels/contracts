@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "truffle test",
-    "build": "truffle-flattener contracts/CryptovoxelsProperty.sol > cryptovoxels-property.flattened.sol"
+    "build": "truffle-flattener contracts/Parcel.sol > parcel.flattened.sol"
   },
   "author": "",
   "license": "ISC",
