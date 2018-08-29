@@ -6,9 +6,7 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 import './Parcel.sol';
 
 /**
- * @title Mintable token
- * @dev Simple ERC20 Token example, with mintable token creation
- * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
+ * @title Color token
  */
 contract Color is StandardToken, Ownable {
   string public constant name = "Cryptovoxels Color";
@@ -73,15 +71,8 @@ contract Color is StandardToken, Ownable {
    */
   function stake(address _from, uint256 _value, uint256 _tokenId) public {
     require(_from == msg.sender);
-    // require(_value <= allowed[_from][msg.sender]);
-
-    // Should https://github.com/OpenZeppelin/zeppelin-solidity/issues/707 be accepted,
-    // this function needs to emit an event with the updated approval.
-    // allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
     _burn(_from, _value);
-
     parcelBalance[_tokenId] += _value;
-
     emit Staked(_from, _value, _tokenId);
   }
 
