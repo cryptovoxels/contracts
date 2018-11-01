@@ -36,10 +36,10 @@ contract Color is StandardToken, Ownable {
   }
 
   // 0x79986aF15539de2db9A5086382daEdA917A9CF0C
-  constructor (address _address) public { 
+  constructor (address _parcelContract) public { 
     creator = msg.sender;
     owner = msg.sender;
-    parcelContract = Parcel(_address);
+    parcelContract = Parcel(_parcelContract); // 0x79986aF15539de2db9A5086382daEdA917A9CF0C);
   }
 
   function takeOwnership() public {

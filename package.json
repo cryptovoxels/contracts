@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "test": "truffle test",
-    "build": "truffle-flattener contracts/Parcel.sol > parcel.flattened.sol"
+    "build-parcel": "truffle-flattener contracts/Parcel.sol > parcel.flattened.sol",
+    "build-color": "truffle-flattener contracts/Color.sol > color.flattened.sol"
   },
   "author": "",
   "license": "ISC",
