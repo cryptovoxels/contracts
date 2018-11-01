@@ -38,6 +38,9 @@ contract('mint test', async (accounts) => {
 
       let result = await instance.tokenURI(i)
       assert.equal(result.valueOf(), `https://www.cryptovoxels.com/n/${i}`)
+
+      let name = await instance.getName(i)
+      assert.equal(name.valueOf(), 'benno')
     })
 
     it('should increase token id', async () => {
@@ -93,6 +96,27 @@ contract('mint test', async (accounts) => {
 
       try {
         await instance.mint.call(ben, 'SUCKS LOTS', { from: ben })
+        assert.fail('Expected to throw')
+      } catch (e) {
+        assert(true)
+      }
+
+      try {
+        await instance.mint.call(ben, '-_-', { from: ben })
+        assert.fail('Expected to throw')
+      } catch (e) {
+        assert(true)
+      }
+
+      try {
+        await instance.mint.call(ben, 'xx-', { from: ben })
+        assert.fail('Expected to throw')
+      } catch (e) {
+        assert(true)
+      }
+
+      try {
+        await instance.mint.call(ben, '--xxxxxx', { from: ben })
         assert.fail('Expected to throw')
       } catch (e) {
         assert(true)

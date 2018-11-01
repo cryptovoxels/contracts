@@ -4,6 +4,7 @@ import "../node_modules/openzeppelin-solidity/contracts/token/ERC721/ERC721Token
 
 contract Name is ERC721Token {
     mapping(string => bool) internal canonicalNames;
+    mapping(uint256 => string) internal lookupNames;
     mapping(string => uint256) internal names;
     uint256 internal topToken;
 
@@ -72,6 +73,20 @@ contract Name is ERC721Token {
                 return false;
         }
 
+        char = b[0];
+
+        // no punctuation at start
+        if ((char == 95) || (char == 45)) {
+            return false;
+        }
+
+        char = b[b.length - 1];
+
+        // no punctuation at end
+        if ((char == 95) || (char == 45)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -96,6 +111,9 @@ contract Name is ERC721Token {
         // Set capitalized name (cant be changed)
         names[_name] = _tokenId;
 
+        // Set a lookup
+        lookupNames[_tokenId] = _name;
+
         super._mint(_to, _tokenId);
 
         return _tokenId;
@@ -103,5 +121,9 @@ contract Name is ERC721Token {
 
     function tokenURI(uint256 _tokenId) public view returns (string) {
         return (_appendUintToString("https://www.cryptovoxels.com/n/", _tokenId));
+    }
+
+    function getName(uint256 _tokenId) public view returns (string) {
+        return lookupNames[_tokenId];
     }
 }
