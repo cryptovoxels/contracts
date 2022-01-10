@@ -53,7 +53,7 @@
                     "type": "address"
                 }
             ],
-            "name": "__WearableDistributor_init",
+            "name": "__Distributor_init",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
