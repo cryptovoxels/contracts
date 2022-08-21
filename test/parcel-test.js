@@ -1,6 +1,7 @@
 /* globals web3, artifacts, contract, beforeEach, describe, it, assert */
 
 const Parcel = artifacts.require('Parcel')
+const REVERT = /VM.+revert/
 
 contract('mint test', async (accounts) => {
   const creator = accounts[0]
@@ -81,7 +82,7 @@ contract('mint test', async (accounts) => {
       })
 
       it('sets really high token id', async function () {
-        let tokenId = 123123124124124124
+        let tokenId = 123123124
 
         await this.token.mint(ben, tokenId, 11, 11, 11, 15, 15, 15, 1234)
 
@@ -94,7 +95,7 @@ contract('mint test', async (accounts) => {
           await this.token.mint(ben, tokenId, 11, 11, 11, 15, 15, 15, 0, { from: ben })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
     })
@@ -123,7 +124,7 @@ contract('mint test', async (accounts) => {
           await this.token.takeOwnership({ from: ben })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -168,7 +169,7 @@ contract('mint test', async (accounts) => {
 
     describe('mint / buy process', function () {
       let tokenId = 100
-      let price = web3.toWei(0.27, 'ether')
+      let price = '270000' // web3.toWei(0.27, 'ether')
 
       it('should buy and setContentURI', async function () {
         await this.token.mint(creator, tokenId, 2, 0, 2, 15, 9, 20, price, { from: creator })
@@ -200,11 +201,11 @@ contract('mint test', async (accounts) => {
 
       it('should fail for other user', async function () {
         try {
-          await this.setPrice.burn(firstTokenId, 1234, { from: ben })
+          await this.token.setPrice(firstTokenId, 1234, { from: ben })
 
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -221,6 +222,10 @@ contract('mint test', async (accounts) => {
         await this.token.burn(secondTokenId)
         let balance = await this.token.totalSupply.call()
         assert.equal(balance.valueOf(), 1)
+
+        // let result = await this.token.getBoundingBox.call(secondTokenId)
+        // assert.equal(result[0].valueOf(), 6)
+
       })
 
       it('should fail for other user', async function () {
@@ -229,7 +234,7 @@ contract('mint test', async (accounts) => {
 
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
     })
@@ -275,7 +280,7 @@ contract('mint test', async (accounts) => {
 
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
 
         let url = await this.token.contentURI(secondTokenId)
@@ -291,14 +296,14 @@ contract('mint test', async (accounts) => {
           await this.token.transferFrom(creator, sam, firstTokenId, { from: creator })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
 
         try {
           await this.token.transferFrom(ben, sam, firstTokenId, { from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
 
         await this.token.transferFrom(ben, sam, firstTokenId, { from: ben })
@@ -336,35 +341,12 @@ contract('mint test', async (accounts) => {
         assert.equal(price.valueOf(), 0)
       })
 
-      it('shouldnt buy after transfer', async function () {
-        await this.token.transferOwnership(dave, { from: creator })
-
-        try {
-          await this.token.buy(tokenId, { value: 1234, from: sam })
-          assert.fail('Expected to throw')
-        } catch (e) {
-          assert(true)
-        }
-
-        let price = await this.token.getPrice.call(tokenId)
-        assert.equal(price.valueOf(), 0)
-      })
-
       it('shouldnt buy for 0', async function () {
         try {
           await this.token.buy(tokenId, { from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
-        }
-      })
-
-      it('shouldnt buy for -1', async function () {
-        try {
-          await this.token.buy(tokenId, { value: -1, from: sam })
-          assert.fail('Expected to throw')
-        } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -373,7 +355,7 @@ contract('mint test', async (accounts) => {
           await this.token.buy(tokenId, { value: 100, from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -382,7 +364,7 @@ contract('mint test', async (accounts) => {
           await this.token.buy(tokenId, { value: 5000, from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -393,7 +375,7 @@ contract('mint test', async (accounts) => {
           await this.token.buy(tokenId, { value: 1234, from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -404,7 +386,7 @@ contract('mint test', async (accounts) => {
           await this.token.buy(tokenId, { value: 1234, from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
 
@@ -415,14 +397,14 @@ contract('mint test', async (accounts) => {
           await this.token.setPrice(tokenId, 5000, { from: creator })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
 
         try {
           await this.token.setPrice(tokenId, 5000, { from: sam })
           assert.fail('Expected to throw')
         } catch (e) {
-          assert(true)
+          assert.match(e.toString(), REVERT)
         }
       })
     })
