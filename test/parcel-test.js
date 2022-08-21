@@ -219,13 +219,23 @@ contract('mint test', async (accounts) => {
 
     describe('burn', function () {
       it('should delete 1 token', async function () {
-        await this.token.burn(secondTokenId)
         let balance = await this.token.totalSupply.call()
+        assert.equal(balance.valueOf(), 2)
+
+        await this.token.burn(secondTokenId)
+        balance = await this.token.totalSupply.call()
         assert.equal(balance.valueOf(), 1)
 
-        // let result = await this.token.getBoundingBox.call(secondTokenId)
-        // assert.equal(result[0].valueOf(), 6)
+        let result
 
+        try {
+          result = await this.token.getBoundingBox.call(secondTokenId)
+        } catch (e) {
+          assert.match(e.toString(), REVERT)
+        }
+
+        result = await this.token.getBoundingBox.call(firstTokenId)
+        assert.equal(result[0].valueOf(), -7)
       })
 
       it('should fail for other user', async function () {
